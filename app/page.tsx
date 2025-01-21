@@ -1,19 +1,21 @@
-"use client";
+"use client"
 
-import { useEffect } from "react";
+import { useEffect } from "react"
+
 
 export default function Home() {
   useEffect(() => {
-    test();
-  });
+    test()
+  })
+
 
 
   async function test() {
-    const response = await fetch("http://localhost:8080/api/users");
-    const data = await response.json();
+    const response = await fetch("http://localhost:8080/auth")
+    const data = await response.json()
 
-    console.log(data);
+    console.log(data)
   }
 
-  return <div></div>;
+  return <div> </div>
 }

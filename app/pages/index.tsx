@@ -1,68 +1,110 @@
+ 
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { useState } from "react";
-import { registerUser, loginUser } from "@/app/service/api"
+import { ChangeEvent, FormEvent, useState } from "react";
+import { registerUser, loginUser } from "@/app/service/api";
+import { CustomUser, CustomUserForm } from "../_types";
 
 export default function SignUp() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [customUser, setCustomUser] = useState<CustomUserForm>({
+    username: "",
+    password: "",
+    repeatPassword: "",
+  })
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const handleRegister = async () => {
-    try {
-      await registerUser({ username, password });
-      setMessage("User registered successfully!");
-    } catch (error) {
-      setMessage("Registration failed.");
-    }
-  };
+  async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault() // Prevent reload of page
 
-  const handleLogin = async () => {
-    try {
-      const user = await loginUser({ username, password });
-      setMessage(`Welcome, ${user.username}!`);
-    } catch (error) {
-      setMessage("Login failed.");
+    setIsLoading(true)
+
+    // Exclude repeat password
+    const newUser: CustomUser = {
+      username: customUser.username,
+      password: customUser.password,
     }
-  };
+
+    // POST
+    const result = await fetch("http://localhost:8080/auth", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json;charset=UTF-8",
+      },
+      body: JSON.stringify(newUser), 
+    })
+
+    if (result.ok) {
+      const data = await result.text()
+      console.log(data)
+    } else {
+      const resultError = await result.json()
+      console.error(resultError)
+    }
+
+    setIsLoading(false)
+  }
+
+  function handleChange(event: ChangeEvent<HTMLInputElement>) {
+    setCustomUser((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value,
+    }))
+  }
 
   return (
-    <div>
-      <h1>Welcome to the Shopping List App</h1>
-      <div>
-        <h2>Register</h2>
+    <div className="h-screen flex flex-col justify-center items-center bg-slate-800">
+      <form
+        onSubmit={handleOnSubmit}
+        method="post"
+        className="flex flex-col max-w-sm gap-4"
+      >
+        {/* Username */}
+        <label htmlFor="username">Username</label>
         <input
+          className="text-black"
           type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          name="username"
+          value={customUser.username}
+          onChange={handleChange}
         />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button onClick={handleRegister}>Register</button>
-      </div>
-      <div>
-        <h2>Login</h2>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button onClick={handleLogin}>Login</button>
-      </div>
-      <p>{message}</p>
-    </div>
-  );
-}
 
+        {/* Password */}
+        <label htmlFor="password">Password</label>
+        <input
+          className="text-black"
+          type="password"
+          name="password"
+          value={customUser.password}
+          onChange={handleChange}
+        />
+
+        {/* RepeatPassword */}
+        <label htmlFor="repeatPassword">Confirm Password</label>
+        <input
+          className="text-black"
+          type="password"
+          name="repeatPassword"
+          value={customUser.repeatPassword}
+          onChange={handleChange}
+        />
+
+        {/* FIELD ERRORS */}
+        <p></p>
+
+        <button
+          className="bg-blue-600 p-4 rounded-md hover:bg-blue-500"
+          type="submit"
+          disabled={isLoading}
+        >
+          Sign Up{" "}
+          {isLoading ? (
+            <span className="inline-block animate-spin">↻</span>
+          ) : (
+            ""
+          )}
+        </button>
+      </form>
+    </div>
+  )
+}

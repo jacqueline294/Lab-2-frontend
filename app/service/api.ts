@@ -1,8 +1,9 @@
-import { LoginRequest, RegisterRequest, ShoppingItem } from "../_types";
+import { CustomUser, CustomUserForm, ShoppingItem } from "../_types";
 
-const API_BASE_URL = "http://localhost:8080/api"; 
 
-export const registerUser = async (data: RegisterRequest) => {
+const API_BASE_URL = "http://localhost:8080"; 
+
+export const registerUser = async (data: CustomUser) => {
   const response = await fetch(`${API_BASE_URL}/users/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -15,7 +16,7 @@ export const registerUser = async (data: RegisterRequest) => {
   return response.json();
 };
 
-export const loginUser = async (data: LoginRequest) => {
+export const loginUser = async (data: CustomUserForm) => {
   const response = await fetch(`${API_BASE_URL}/users/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
