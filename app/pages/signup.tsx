@@ -1,7 +1,5 @@
-
-
 import { ChangeEvent, FormEvent, useState } from "react";
-import { CustomUser, CustomUserForm } from "../_types/ICustomUser";
+import { CustomUser, CustomUserForm } from "../_type/ICustomUser";
 
 export default function SignUp() {
   const [customUser, setCustomUser] = useState<CustomUserForm>({
@@ -12,18 +10,16 @@ export default function SignUp() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); 
+    event.preventDefault();
 
     setIsLoading(true);
 
-    
     const newUser: CustomUser = {
       username: customUser.username,
       password: customUser.password,
     };
 
-    
-    const result = await fetch("http://localhost:8080/auth", {
+    const result = await fetch("http://localhost:8080/api/v1/user", {
       method: "POST",
       headers: {
         "content-type": "application/json;charset=UTF-8",

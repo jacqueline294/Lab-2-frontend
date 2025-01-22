@@ -1,62 +1,27 @@
-import { CustomUser, CustomUserForm, ShoppingItem } from "../_types/ICustomUser";
+import axios from "axios";
 
+const API_URL = "http://localhost:8080";
 
-const API_BASE_URL = "http://localhost:8080"; 
-
-export const registerUser = async (data: CustomUser) => {
-  const response = await fetch(`${API_BASE_URL}/users/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+export const createUser = async (userData: { username: string; password: string }) => {
+  return axios.post(`${API_URL}/auth`, userData, {
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
-
-  if (!response.ok) {
-    throw new Error("Failed to register user");
-  }
-  return response.json();
 };
 
-export const loginUser = async (data: CustomUserForm) => {
-  const response = await fetch(`${API_BASE_URL}/users/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to login");
-  }
-  return response.json();
+export const fetchShoppingList = async () => {
+  return axios.get(`${API_URL}/shopping-list`);
 };
 
-export const fetchShoppingItems = async (userId: number) => {
-  const response = await fetch(`${API_BASE_URL}/items?userId=${userId}`);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch shopping items");
-  }
-  return response.json();
+export const addShoppingItem = async (item: { name: string; quantity: number }) => {
+  return axios.post(`${API_URL}/shopping-list`, item);
 };
 
-export const addShoppingItem = async (item: ShoppingItem) => {
-  const response = await fetch(`${API_BASE_URL}/items`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(item),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to add shopping item");
-  }
-  return response.json();
+export const updateShoppingItem = async (id: number, item: { name: string; quantity: number }) => {
+  return axios.put(`${API_URL}/shopping-list/${id}`, item);
 };
 
-export const deleteShoppingItem = async (id: number, userId: number) => {
-  const response = await fetch(`${API_BASE_URL}/items/${id}?userId=${userId}`, {
-    method: "DELETE",
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to delete shopping item");
-  }
+export const deleteShoppingItem = async (id: number) => {
+  return axios.delete(`${API_URL}/shopping-list/${id}`);
 };
