@@ -1,10 +1,11 @@
+
 import { useEffect, useState } from "react";
 import {
   fetchShoppingItems,
   addShoppingItem,
   deleteShoppingItem,
 } from "../service/api";
-import { ShoppingItem } from "../_types";
+import { ShoppingItem } from "../_types/ICustomUser";
 
 export default function ShoppingList() {
   const [items, setItems] = useState<ShoppingItem[]>([]);

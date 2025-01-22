@@ -1,55 +1,52 @@
- 
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { ChangeEvent, FormEvent, useState } from "react";
-import { registerUser, loginUser } from "@/app/service/api";
-import { CustomUser, CustomUserForm } from "../_types";
+import { CustomUser, CustomUserForm } from "../_types/ICustomUser";
 
 export default function SignUp() {
   const [customUser, setCustomUser] = useState<CustomUserForm>({
     username: "",
     password: "",
     repeatPassword: "",
-  })
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault() // Prevent reload of page
+    event.preventDefault(); 
 
-    setIsLoading(true)
+    setIsLoading(true);
 
-    // Exclude repeat password
+    
     const newUser: CustomUser = {
       username: customUser.username,
       password: customUser.password,
-    }
+    };
 
-    // POST
+    
     const result = await fetch("http://localhost:8080/auth", {
       method: "POST",
       headers: {
         "content-type": "application/json;charset=UTF-8",
       },
-      body: JSON.stringify(newUser), 
-    })
+      body: JSON.stringify(newUser),
+    });
 
     if (result.ok) {
-      const data = await result.text()
-      console.log(data)
+      const data = await result.text();
+      console.log(data);
     } else {
-      const resultError = await result.json()
-      console.error(resultError)
+      const resultError = await result.json();
+      console.error(resultError);
     }
 
-    setIsLoading(false)
+    setIsLoading(false);
   }
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     setCustomUser((prevState) => ({
       ...prevState,
       [event.target.name]: event.target.value,
-    }))
+    }));
   }
 
   return (
@@ -106,5 +103,5 @@ export default function SignUp() {
         </button>
       </form>
     </div>
-  )
+  );
 }

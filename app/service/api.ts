@@ -1,4 +1,4 @@
-import { CustomUser, CustomUserForm, ShoppingItem } from "../_types";
+import { CustomUser, CustomUserForm, ShoppingItem } from "../_types/ICustomUser";
 
 
 const API_BASE_URL = "http://localhost:8080"; 
