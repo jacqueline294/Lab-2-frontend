@@ -87,10 +87,9 @@ export default function SignUp() {
           {isLoading ? "Signing Up..." : "Sign Up"}
         </button>
         
-<p className="text-center mt-4">
-  Already have an account? <Link href="/signin" className="text-blue-500 underline">Sign In</Link>
+        <p className="text-center mt-4">
+  Already have an account? <Link href="/login" className="text-blue-500 underline">Sign In</Link>
 </p>
-
       </form>
     </div>
   );
